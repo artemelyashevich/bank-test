@@ -37,6 +37,6 @@ public record RegisterDto(
         @NotNull(message = "Initial balance is required")
         @DecimalMin(value = "0.0", inclusive = false, message = "Initial balance must be positive")
         @Digits(integer = 16, fraction = 2, message = "Balance must have up to 16 integer and 2 fraction digits")
-        BigDecimal initialBalance
+        BigDecimal balance
 ) {
 }

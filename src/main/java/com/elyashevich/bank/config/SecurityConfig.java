@@ -1,5 +1,6 @@
 package com.elyashevich.bank.config;
 
+import com.elyashevich.bank.security.JwtAuthenticationEntryPoint;
 import com.elyashevich.bank.security.JwtFilter;
 import com.elyashevich.bank.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final UserService userService;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -40,6 +42,8 @@ public class SecurityConfig {
                 )
                 .authenticationProvider(this.authenticationProvider())
                 .addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(this.jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
