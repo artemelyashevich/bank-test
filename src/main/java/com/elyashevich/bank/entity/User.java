@@ -1,5 +1,6 @@
 package com.elyashevich.bank.entity;
 
+import com.elyashevich.bank.exception.ResourceAlreadyExistsException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,12 +34,31 @@ public class User {
     @Column(name = "PASSWORD", length = 500, nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Account> accounts;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Account account;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EmailData> emails;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PhoneData> phones;
+
+    public void addEmail(EmailData email) {
+        if (emails == null) {
+            emails = new ArrayList<>();
+        }
+        if (!emails.isEmpty()) {
+            throw new ResourceAlreadyExistsException("User already has email");
+        }
+        emails.add(email);
+        email.setUser(this);
+    }
+
+    public void addPhone(PhoneData phone) {
+        if (phones == null) {
+            phones = new ArrayList<>();
+        }
+        phones.add(phone);
+        phone.setUser(this);
+    }
 }
