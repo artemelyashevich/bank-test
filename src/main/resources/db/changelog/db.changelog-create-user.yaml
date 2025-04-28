@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: elyashevich
+      changes:
+        - createTable:
+            tableName: USERS
+            columns:
+              - column:
+                  name: ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: VARCHAR(500)
+              - column:
+                  name: DATE_OF_BIRTH
+                  type: DATE
+              - column:
+                  name: PASSWORD
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false

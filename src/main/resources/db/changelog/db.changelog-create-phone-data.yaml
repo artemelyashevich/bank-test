@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: elyashevich
+      changes:
+        - createTable:
+            tableName: PHONE_DATA
+            columns:
+              - column:
+                  name: ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: USER_ID
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_phone_user
+                    references: USERS(ID)
+              - column:
+                  name: PHONE
+                  type: VARCHAR(13)
+                  constraints:
+                    unique: true
+                    nullable: false
