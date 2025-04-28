@@ -27,3 +27,6 @@ application:
   security:
     jwt:
       secret: ${SECRET}
+      lifetime:
+        access: 1800000 #30min
+        refresh: 864000000 #10d

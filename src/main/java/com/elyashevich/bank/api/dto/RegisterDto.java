@@ -28,10 +28,6 @@ public record RegisterDto(
         @NotNull(message= "Password must be not null")
         @NotBlank(message = "Password must be not blank")
         @Length(max = 500, min=8, message = "Password must be in {min} and {max}")
-        @Pattern(
-                regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
-                message = "Password must contain at least one digit, one lowercase, one uppercase letter, and one special character"
-        )
         String password,
 
         @NotBlank(message = "Phone number is required")

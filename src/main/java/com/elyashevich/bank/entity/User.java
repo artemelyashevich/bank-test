@@ -47,9 +47,6 @@ public class User {
         if (emails == null) {
             emails = new ArrayList<>();
         }
-        if (!emails.isEmpty()) {
-            throw new ResourceAlreadyExistsException("User already has email");
-        }
         emails.add(email);
         email.setUser(this);
     }
