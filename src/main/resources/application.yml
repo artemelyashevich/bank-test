@@ -23,3 +23,7 @@ spring:
     enabled: true
 server:
   port: 8080
+application:
+  security:
+    jwt:
+      secret: ${SECRET}
