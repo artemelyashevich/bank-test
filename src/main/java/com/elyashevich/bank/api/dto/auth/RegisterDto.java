@@ -1,4 +1,4 @@
-package com.elyashevich.bank.api.dto;
+package com.elyashevich.bank.api.dto.auth;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
@@ -18,16 +18,16 @@ public record RegisterDto(
         @Email(message = "Invalid email format")
         String email,
 
-        @NotNull(message= "Name must be not null")
+        @NotNull(message = "Name must be not null")
         @NotBlank(message = "Name must be not blank")
-        @Length(max = 500, min=1, message = "Name must be in {min} and {max}")
+        @Length(max = 500, min = 1, message = "Name must be in {min} and {max}")
         String name,
 
         LocalDate dateOfBirth,
 
-        @NotNull(message= "Password must be not null")
+        @NotNull(message = "Password must be not null")
         @NotBlank(message = "Password must be not blank")
-        @Length(max = 500, min=8, message = "Password must be in {min} and {max}")
+        @Length(max = 500, min = 8, message = "Password must be in {min} and {max}")
         String password,
 
         @NotBlank(message = "Phone number is required")

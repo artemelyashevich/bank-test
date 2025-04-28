@@ -1,4 +1,4 @@
-package com.elyashevich.bank.api.dto;
+package com.elyashevich.bank.api.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -15,5 +15,5 @@ public record LoginDto(
         @NotBlank(message = "Password must be not blank")
         @Length(max = 500, min = 8, message = "Password must be in {min} and {max}")
         String password
-        ) {
+) {
 }

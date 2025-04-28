@@ -48,6 +48,7 @@ public class JwtServiceImpl implements JwtService {
 
         return Jwts.builder()
                 .setClaims(Map.of("id", user.getId()))
+                .setSubject(user.getEmails().getFirst().getEmail())
                 .setIssuedAt(issuedAt)
                 .setExpiration(expirationDate)
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)

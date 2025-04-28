@@ -1,6 +1,6 @@
 package com.elyashevich.bank.exception;
 
-public class ResourceNotFoundException extends RuntimeException{
+public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException() {
     }
 

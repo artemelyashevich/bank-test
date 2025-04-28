@@ -1,4 +1,4 @@
-package com.elyashevich.bank.api.dto;
+package com.elyashevich.bank.api.dto.auth;
 
 public record JwtResponse(
         String accessToken,

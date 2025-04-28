@@ -1,7 +1,7 @@
 package com.elyashevich.bank.api.mapper;
 
-import com.elyashevich.bank.api.dto.LoginDto;
-import com.elyashevich.bank.api.dto.RegisterDto;
+import com.elyashevich.bank.api.dto.auth.LoginDto;
+import com.elyashevich.bank.api.dto.auth.RegisterDto;
 import com.elyashevich.bank.entity.EmailData;
 import com.elyashevich.bank.entity.PhoneData;
 import com.elyashevich.bank.entity.User;

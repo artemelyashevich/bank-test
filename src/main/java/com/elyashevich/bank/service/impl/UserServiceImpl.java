@@ -6,6 +6,8 @@ import com.elyashevich.bank.repository.UserRepository;
 import com.elyashevich.bank.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,5 +43,14 @@ public class UserServiceImpl implements UserService {
 
         log.info("New user created: '{}'", newUser);
         return newUser;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var user = this.findByEmail(username);
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getId().toString())
+                .password(user.getPassword())
+                .build();
     }
 }

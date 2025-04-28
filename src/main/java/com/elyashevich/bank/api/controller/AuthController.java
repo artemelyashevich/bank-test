@@ -1,8 +1,8 @@
 package com.elyashevich.bank.api.controller;
 
-import com.elyashevich.bank.api.dto.JwtResponse;
-import com.elyashevich.bank.api.dto.LoginDto;
-import com.elyashevich.bank.api.dto.RegisterDto;
+import com.elyashevich.bank.api.dto.auth.JwtResponse;
+import com.elyashevich.bank.api.dto.auth.LoginDto;
+import com.elyashevich.bank.api.dto.auth.RegisterDto;
 import com.elyashevich.bank.api.mapper.UserMapper;
 import com.elyashevich.bank.service.AuthService;
 import jakarta.validation.Valid;
