@@ -1,6 +1,7 @@
 package com.elyashevich.bank.event;
 
 import com.elyashevich.bank.entity.User;
+import com.elyashevich.bank.service.UserElasticsearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

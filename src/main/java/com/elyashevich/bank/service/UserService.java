@@ -12,4 +12,6 @@ public interface UserService extends UserDetailsService {
     User create(User user);
 
     List<User> findAll();
+
+    User update(User user);
 }

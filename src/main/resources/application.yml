@@ -3,11 +3,12 @@ spring:
     name: bank
   config:
     import: optional:file:.env[.properties]
+  elasticsearch:
+    uris: http://localhost:9200
   data:
     elasticsearch:
-      client:
-        reactive:
-          endpoints: localhost:9200
+      repositories:
+        enabled: true
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
