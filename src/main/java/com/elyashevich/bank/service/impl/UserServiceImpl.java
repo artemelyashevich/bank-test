@@ -3,9 +3,6 @@ package com.elyashevich.bank.service.impl;
 import com.elyashevich.bank.entity.User;
 import com.elyashevich.bank.exception.ResourceNotFoundException;
 import com.elyashevich.bank.repository.UserRepository;
-import com.elyashevich.bank.service.AccountService;
-import com.elyashevich.bank.service.EmailDataService;
-import com.elyashevich.bank.service.PhoneDataService;
 import com.elyashevich.bank.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +19,6 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final EmailDataService emailDataService;
-    private final PhoneDataService phoneDataService;
-    private final AccountService accountService;
 
     @Override
     public User findByEmail(String email) {
