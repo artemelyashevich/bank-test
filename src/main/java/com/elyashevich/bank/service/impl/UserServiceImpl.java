@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
         this.validateAndUpdateEmails(user, candidate);
         this.validateAndUpdatePhones(user, candidate);
 
-        User updatedUser = userRepository.save(user);
+        var updatedUser = userRepository.save(user);
 
         this.publishEvent(EventAction.UPDATE, updatedUser);
 
@@ -107,6 +107,23 @@ public class UserServiceImpl implements UserService {
         return updatedUser;
     }
 
+    @Override
+    @Transactional
+    public User deleteEmailsAndPhones(Long userId, User candidate) {
+        log.debug("Attempting delete user emails and phones: {}", candidate);
+
+        var user = this.findById(userId);
+
+        this.validateAndDeleteEmails(user, candidate);
+        this.validateAndDeletePhones(user, candidate);
+
+        var updatedUser = userRepository.save(user);
+
+        this.publishEvent(EventAction.UPDATE, updatedUser);
+
+        log.info("Successfully updated user emails and phones with id: {}", userId);
+        return updatedUser;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -128,7 +145,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
 
         candidate.getEmails().forEach(newEmail -> {
-            String email = newEmail.getEmail();
+            var email = newEmail.getEmail();
             if (!existingEmails.contains(email)) {
                 if (emailDataService.existsByEmailAndAnotherUser(email, user)) {
                     throw new ResourceAlreadyExistsException(
@@ -146,7 +163,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
 
         candidate.getPhones().forEach(newPhone -> {
-            String phone = newPhone.getPhone();
+            var phone = newPhone.getPhone();
             if (!existingPhones.contains(phone)) {
                 if (phoneDataService.existsByPhoneAndAnotherUser(phone, user)) {
                     throw new ResourceAlreadyExistsException(
@@ -156,6 +173,39 @@ public class UserServiceImpl implements UserService {
                 user.getPhones().add(newPhone);
             }
         });
+    }
 
+    private void validateAndDeletePhones(User user, User candidate) {
+        var existingPhones = user.getPhones().stream()
+                .map(PhoneData::getPhone)
+                .collect(Collectors.toSet());
+
+        candidate.getPhones().forEach(p -> {
+            var phone = p.getPhone();
+            if (!existingPhones.contains(phone)) {
+                throw new ResourceNotFoundException("User didn't have phone: '%s'".formatted(phone));
+            }
+            user.setPhones(user.getPhones().stream()
+                    .filter(ph -> !ph.getPhone().equals(phone))
+                    .toList()
+            );
+        });
+    }
+
+    private void validateAndDeleteEmails(User user, User candidate) {
+        var existingEmails = user.getEmails().stream()
+                .map(EmailData::getEmail)
+                .collect(Collectors.toSet());
+
+        candidate.getEmails().forEach(e -> {
+            var email = e.getEmail();
+            if (!existingEmails.contains(email)) {
+                throw new ResourceNotFoundException("User didn't have phone: '%s'".formatted(email));
+            }
+            user.setEmails(user.getEmails().stream()
+                    .filter(ph -> !ph.getEmail().equals(email))
+                    .toList()
+            );
+        });
     }
 }

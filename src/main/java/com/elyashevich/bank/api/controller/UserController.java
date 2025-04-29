@@ -1,8 +1,8 @@
 package com.elyashevich.bank.api.controller;
 
+import com.elyashevich.bank.api.dto.user.UserDto;
 import com.elyashevich.bank.api.dto.user.UserResponseDto;
 import com.elyashevich.bank.api.dto.user.UserSearchRequest;
-import com.elyashevich.bank.api.dto.user.UserUpdateDto;
 import com.elyashevich.bank.api.mapper.UserMapper;
 import com.elyashevich.bank.domain.es.UserES;
 import com.elyashevich.bank.service.UserElasticsearchService;
@@ -15,6 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -76,7 +77,7 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<UserResponseDto> update(
-            @Valid @RequestBody UserUpdateDto userUpdateDto,
+            @Valid @RequestBody UserDto userUpdateDto,
             UriComponentsBuilder uriComponentsBuilder
     ) {
         var userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -86,5 +87,12 @@ public class UserController {
                                 .build(Map.of("id", user.getId()))
                 )
                 .body(this.userMapper.toDto(user));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deletePhoneAndEmail(@Valid @RequestBody UserDto userDto) {
+        var userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
+        var user = this.userService.deleteEmailsAndPhones(userId, this.userMapper.toEntity(userDto));
+        return ResponseEntity.noContent().build();
     }
 }

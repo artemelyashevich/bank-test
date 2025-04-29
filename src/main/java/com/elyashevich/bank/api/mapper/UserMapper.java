@@ -2,8 +2,8 @@ package com.elyashevich.bank.api.mapper;
 
 import com.elyashevich.bank.api.dto.auth.LoginDto;
 import com.elyashevich.bank.api.dto.auth.RegisterDto;
+import com.elyashevich.bank.api.dto.user.UserDto;
 import com.elyashevich.bank.api.dto.user.UserResponseDto;
-import com.elyashevich.bank.api.dto.user.UserUpdateDto;
 import com.elyashevich.bank.domain.entity.Account;
 import com.elyashevich.bank.domain.entity.EmailData;
 import com.elyashevich.bank.domain.entity.PhoneData;
@@ -28,9 +28,9 @@ public interface UserMapper {
     @Mapping(target = "emails", expression = "java(mapSingleEmail(loginDTO.email()))")
     User toEntity(LoginDto loginDTO);
 
-    @Mapping(target = "emails", expression = "java(mapMultiEmail(UserUpdateDto.emails()))")
-    @Mapping(target = "phones", expression = "java(mapMultiPhone(UserUpdateDto.phones()))")
-    User toEntity(UserUpdateDto updateDto);
+    @Mapping(target = "emails", expression = "java(mapMultiEmail(updateDto.emails()))")
+    @Mapping(target = "phones", expression = "java(mapMultiPhone(updateDto.phones()))")
+    User toEntity(UserDto updateDto);
 
     @Mapping(target = "emails", expression = "java(mapEmailToDto(user.getEmails()))")
     @Mapping(target = "phones", expression = "java(mapPhonesToDto(user.getPhones()))")

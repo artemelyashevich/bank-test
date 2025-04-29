@@ -16,4 +16,6 @@ public interface UserService extends UserDetailsService {
     List<User> findAll();
 
     User update(Long userId, User user);
+
+    User deleteEmailsAndPhones(Long userId, User entity);
 }
