@@ -6,10 +6,8 @@ import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.JsonData;
 import com.elyashevich.bank.api.dto.user.UserSearchRequest;
-import com.elyashevich.bank.domain.entity.EmailData;
-import com.elyashevich.bank.domain.entity.PhoneData;
-import com.elyashevich.bank.domain.entity.User;
 import com.elyashevich.bank.domain.es.UserES;
+import com.elyashevich.bank.domain.event.UserAggregate;
 import com.elyashevich.bank.exception.BusinessException;
 import com.elyashevich.bank.repository.UserElasticsearchRepository;
 import com.elyashevich.bank.service.UserElasticsearchService;
@@ -95,19 +93,13 @@ public class UserElasticsearchServiceImpl implements UserElasticsearchService {
     }
 
     @Override
-    public void index(User user) {
+    public void index(UserAggregate user) {
         var userEs = UserES.builder()
                 .id(user.getId())
                 .name(user.getName())
-                .emails(user.getEmails().stream()
-                        .map(EmailData::getEmail)
-                        .toList()
-                )
-                .phones(user.getPhones().stream()
-                        .map(PhoneData::getPhone)
-                        .toList()
-                )
-                .balance(user.getAccount().getBalance())
+                .emails(user.getEmails())
+                .phones(user.getPhones())
+                .balance(user.getBalance())
                 .dateOfBirth(user.getDateOfBirth())
                 .build();
         this.userElasticsearchRepository.save(userEs);

@@ -5,6 +5,8 @@ import com.elyashevich.bank.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface EmailDataRepository extends JpaRepository<EmailData, Long> {
 
     @Query("""
@@ -13,4 +15,6 @@ public interface EmailDataRepository extends JpaRepository<EmailData, Long> {
         WHERE e.email = :email and e.user != :user
         """)
     boolean existsByEmailAndAnotherUser(String email, User user);
+
+    Optional<EmailData> findByEmail(String email);
 }

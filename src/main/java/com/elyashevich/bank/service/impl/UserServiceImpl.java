@@ -5,6 +5,8 @@ import com.elyashevich.bank.domain.entity.PhoneData;
 import com.elyashevich.bank.domain.entity.User;
 import com.elyashevich.bank.domain.event.EntityEvent;
 import com.elyashevich.bank.domain.event.EventAction;
+import com.elyashevich.bank.domain.event.UserAggregate;
+import com.elyashevich.bank.exception.BusinessException;
 import com.elyashevich.bank.exception.ResourceAlreadyExistsException;
 import com.elyashevich.bank.exception.ResourceNotFoundException;
 import com.elyashevich.bank.repository.UserRepository;
@@ -19,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -109,20 +112,56 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User deleteEmailsAndPhones(Long userId, User candidate) {
-        log.debug("Attempting delete user emails and phones: {}", candidate);
+    public void deleteEmailsAndPhones(Long userId, User contactsToRemove) {
+        log.debug("Attempting to remove contacts from user with id: {}", userId);
 
-        var user = this.findById(userId);
+        User user = this.findById(userId);
 
-        this.validateAndDeleteEmails(user, candidate);
-        this.validateAndDeletePhones(user, candidate);
+        var emailsToRemove = contactsToRemove.getEmails().stream().map(EmailData::getEmail).toList();
+        var phonesToRemove = contactsToRemove.getPhones().stream().map(PhoneData::getPhone).toList();
+
+        if (!emailsToRemove.isEmpty()) {
+            removeEmails(user, emailsToRemove);
+        }
+
+        if (!phonesToRemove.isEmpty()) {
+            removePhones(user, phonesToRemove);
+        }
 
         var updatedUser = userRepository.save(user);
-
         this.publishEvent(EventAction.UPDATE, updatedUser);
 
-        log.info("Successfully updated user emails and phones with id: {}", userId);
-        return updatedUser;
+        log.info("Successfully removed contacts from user with id: {}", userId);
+    }
+
+    private void removeEmails(User user, List<String> emailsToRemove) {
+        var emailsCopy = new ArrayList<>(user.getEmails());
+
+        for (EmailData email : emailsCopy) {
+            if (emailsToRemove.contains(email.getEmail())) {
+                user.getEmails().remove(email);
+                this.emailDataService.delete(email.getEmail());
+            }
+        }
+
+        if (user.getEmails().isEmpty()) {
+            throw new BusinessException("User must have at least one email");
+        }
+    }
+
+    private void removePhones(User user, List<String> phonesToRemove) {
+        var phonesCopy = new ArrayList<>(user.getPhones());
+
+        for (PhoneData phone : phonesCopy) {
+            if (phonesToRemove.contains(phone.getPhone())) {
+                user.getPhones().remove(phone);
+                this.phoneDataService.delete(phone.getPhone());
+            }
+        }
+
+        if (user.getPhones().isEmpty()) {
+            throw new BusinessException("User must have at least one phone");
+        }
     }
 
     @Override
@@ -135,7 +174,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private void publishEvent(EventAction action, User user) {
-        var event = new EntityEvent<>(action, user);
+        var event = new EntityEvent<>(action, UserAggregate.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .balance(user.getAccount().getBalance())
+                .emails(user.getEmails().stream().map(EmailData::getEmail).toList())
+                .phones(user.getPhones().stream().map(PhoneData::getPhone).toList())
+                .dateOfBirth(user.getDateOfBirth())
+                .build());
         redisTemplate.convertAndSend("user-events", event);
     }
 
@@ -172,40 +218,6 @@ public class UserServiceImpl implements UserService {
                 newPhone.setUser(user);
                 user.getPhones().add(newPhone);
             }
-        });
-    }
-
-    private void validateAndDeletePhones(User user, User candidate) {
-        var existingPhones = user.getPhones().stream()
-                .map(PhoneData::getPhone)
-                .collect(Collectors.toSet());
-
-        candidate.getPhones().forEach(p -> {
-            var phone = p.getPhone();
-            if (!existingPhones.contains(phone)) {
-                throw new ResourceNotFoundException("User didn't have phone: '%s'".formatted(phone));
-            }
-            user.setPhones(user.getPhones().stream()
-                    .filter(ph -> !ph.getPhone().equals(phone))
-                    .toList()
-            );
-        });
-    }
-
-    private void validateAndDeleteEmails(User user, User candidate) {
-        var existingEmails = user.getEmails().stream()
-                .map(EmailData::getEmail)
-                .collect(Collectors.toSet());
-
-        candidate.getEmails().forEach(e -> {
-            var email = e.getEmail();
-            if (!existingEmails.contains(email)) {
-                throw new ResourceNotFoundException("User didn't have phone: '%s'".formatted(email));
-            }
-            user.setEmails(user.getEmails().stream()
-                    .filter(ph -> !ph.getEmail().equals(email))
-                    .toList()
-            );
         });
     }
 }

@@ -26,9 +26,7 @@ public class BalanceUpdateService {
             var maxBalance = initialBalance.multiply(BigDecimal.valueOf(2.07));
             var newBalance = currentBalance.multiply(BigDecimal.valueOf(1.10));
 
-            if (newBalance.compareTo(maxBalance) > 0) {
-                account.setBalance(maxBalance);
-            } else {
+            if (newBalance.compareTo(maxBalance) < 0) {
                 account.setBalance(newBalance);
             }
         }

@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,4 +40,12 @@ public class Account {
     @Column(name = "BALANCE", nullable = false, precision = 19, scale = 2)
     private BigDecimal balance;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Account{");
+        sb.append("id=").append(id);
+        sb.append(", balance=").append(balance);
+        sb.append('}');
+        return sb.toString();
+    }
 }

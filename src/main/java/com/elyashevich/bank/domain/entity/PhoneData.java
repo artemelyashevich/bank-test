@@ -25,7 +25,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,4 +40,13 @@ public class PhoneData {
 
     @Column(name = "PHONE", length = 13, nullable = false, unique = true)
     private String phone;
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("PhoneData{");
+        sb.append("id=").append(id);
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

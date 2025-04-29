@@ -26,7 +26,6 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString(exclude = "password")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -48,25 +47,22 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Account account;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<EmailData> emails;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PhoneData> phones;
 
-    public void addEmail(EmailData email) {
-        if (emails == null) {
-            emails = new ArrayList<>();
-        }
-        emails.add(email);
-        email.setUser(this);
-    }
-
-    public void addPhone(PhoneData phone) {
-        if (phones == null) {
-            phones = new ArrayList<>();
-        }
-        phones.add(phone);
-        phone.setUser(this);
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("User{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", dateOfBirth=").append(dateOfBirth);
+        sb.append(", emails=").append(emails);
+        sb.append(", phones=").append(phones);
+        sb.append(", account=").append(account);
+        sb.append('}');
+        return sb.toString();
     }
 }

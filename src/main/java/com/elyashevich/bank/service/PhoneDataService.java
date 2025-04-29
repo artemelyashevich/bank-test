@@ -9,4 +9,5 @@ public interface PhoneDataService {
 
     boolean existsByPhoneAndAnotherUser(String phone, User user);
 
+    void delete(String phone);
 }

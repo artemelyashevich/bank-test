@@ -5,6 +5,8 @@ import com.elyashevich.bank.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface PhoneDataRepository extends JpaRepository<PhoneData, Long> {
 
     @Query("""
@@ -13,4 +15,6 @@ public interface PhoneDataRepository extends JpaRepository<PhoneData, Long> {
         WHERE p.phone = :phone and p.user != :user
         """)
     boolean existsByPhoneAndAnotherUser(String phone, User user);
+
+    Optional<PhoneData> findByPhone(String phone);
 }

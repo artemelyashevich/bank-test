@@ -17,5 +17,5 @@ public interface UserService extends UserDetailsService {
 
     User update(Long userId, User user);
 
-    User deleteEmailsAndPhones(Long userId, User entity);
+    void deleteEmailsAndPhones(Long userId, User entity);
 }

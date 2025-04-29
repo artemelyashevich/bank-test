@@ -25,7 +25,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,4 +40,13 @@ public class EmailData {
 
     @Column(name = "EMAIL", length = 200, nullable = false, unique = true)
     private String email;
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("EmailData{");
+        sb.append("id=").append(id);
+        sb.append(", email='").append(email).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

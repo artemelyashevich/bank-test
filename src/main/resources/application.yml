@@ -19,6 +19,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        type:
+          json_format_mapper: com.elyashevich.bank.config.JacksonJsonFormatMapperCustom
   datasource:
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
@@ -26,6 +28,9 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
     enabled: true
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
 server:
   port: 8080
 application:

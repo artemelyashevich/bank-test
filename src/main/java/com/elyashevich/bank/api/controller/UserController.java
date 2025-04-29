@@ -92,7 +92,7 @@ public class UserController {
     @DeleteMapping
     public ResponseEntity<Void> deletePhoneAndEmail(@Valid @RequestBody UserDto userDto) {
         var userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
-        var user = this.userService.deleteEmailsAndPhones(userId, this.userMapper.toEntity(userDto));
+        this.userService.deleteEmailsAndPhones(userId, this.userMapper.toEntity(userDto));
         return ResponseEntity.noContent().build();
     }
 }
