@@ -1,7 +1,7 @@
 package com.elyashevich.bank.repository;
 
-import com.elyashevich.bank.entity.Account;
-import com.elyashevich.bank.entity.User;
+import com.elyashevich.bank.domain.entity.Account;
+import com.elyashevich.bank.domain.entity.User;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;

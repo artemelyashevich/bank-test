@@ -1,4 +1,4 @@
-package com.elyashevich.bank.event;
+package com.elyashevich.bank.domain.event;
 
 public enum EventAction {
     CREATE,

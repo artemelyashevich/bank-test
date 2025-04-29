@@ -1,4 +1,4 @@
-package com.elyashevich.bank.entity;
+package com.elyashevich.bank.domain.es;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

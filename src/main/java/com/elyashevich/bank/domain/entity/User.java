@@ -1,4 +1,4 @@
-package com.elyashevich.bank.entity;
+package com.elyashevich.bank.domain.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

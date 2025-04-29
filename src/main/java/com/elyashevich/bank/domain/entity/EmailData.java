@@ -1,4 +1,4 @@
-package com.elyashevich.bank.entity;
+package com.elyashevich.bank.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,8 +19,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "PHONE_DATA", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "PHONE")
+@Table(name = "EMAIL_DATA", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "EMAIL")
 })
 @Getter
 @Setter
@@ -29,7 +29,7 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PhoneData {
+public class EmailData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +39,6 @@ public class PhoneData {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @Column(name = "PHONE", length = 13, nullable = false, unique = true)
-    private String phone;
+    @Column(name = "EMAIL", length = 200, nullable = false, unique = true)
+    private String email;
 }

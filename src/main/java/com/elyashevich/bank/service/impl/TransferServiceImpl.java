@@ -1,6 +1,6 @@
 package com.elyashevich.bank.service.impl;
 
-import com.elyashevich.bank.entity.Account;
+import com.elyashevich.bank.domain.entity.Account;
 import com.elyashevich.bank.exception.BusinessException;
 import com.elyashevich.bank.exception.ResourceNotFoundException;
 import com.elyashevich.bank.repository.AccountRepository;

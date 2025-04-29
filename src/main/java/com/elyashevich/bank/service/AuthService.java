@@ -1,7 +1,7 @@
 package com.elyashevich.bank.service;
 
 import com.elyashevich.bank.api.dto.auth.JwtResponse;
-import com.elyashevich.bank.entity.User;
+import com.elyashevich.bank.domain.entity.User;
 
 public interface AuthService {
 

@@ -1,6 +1,6 @@
 package com.elyashevich.bank.service.impl;
 
-import com.elyashevich.bank.entity.Account;
+import com.elyashevich.bank.domain.entity.Account;
 import com.elyashevich.bank.repository.AccountRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

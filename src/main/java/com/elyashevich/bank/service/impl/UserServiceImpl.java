@@ -1,10 +1,15 @@
 package com.elyashevich.bank.service.impl;
 
-import com.elyashevich.bank.entity.User;
-import com.elyashevich.bank.event.EntityEvent;
-import com.elyashevich.bank.event.EventAction;
+import com.elyashevich.bank.domain.entity.EmailData;
+import com.elyashevich.bank.domain.entity.PhoneData;
+import com.elyashevich.bank.domain.entity.User;
+import com.elyashevich.bank.domain.event.EntityEvent;
+import com.elyashevich.bank.domain.event.EventAction;
+import com.elyashevich.bank.exception.ResourceAlreadyExistsException;
 import com.elyashevich.bank.exception.ResourceNotFoundException;
 import com.elyashevich.bank.repository.UserRepository;
+import com.elyashevich.bank.service.EmailDataService;
+import com.elyashevich.bank.service.PhoneDataService;
 import com.elyashevich.bank.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,14 +20,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final PhoneDataService phoneDataService;
+    private final EmailDataService emailDataService;
     private final UserRepository userRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+
+    @Override
+    public User findById(Long id) {
+        log.debug("Attempting find user by id: '{}'", id);
+
+        var user = this.userRepository.findById(id)
+                .orElseThrow(() -> {
+                    String message = String.format("User with id: '%s' was not found", id);
+                    log.warn(message);
+                    return new ResourceNotFoundException(message);
+                });
+
+        log.info("Found by id: {}, user: {}", id, user);
+        return user;
+    }
 
     @Override
     public User findByEmail(String email) {
@@ -67,9 +90,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user) {
-        return null;
+    @Transactional
+    public User update(Long userId, User candidate) {
+        log.debug("Attempting to update user with id: {}", userId);
+
+        User user = this.findById(userId);
+
+        this.validateAndUpdateEmails(user, candidate);
+        this.validateAndUpdatePhones(user, candidate);
+
+        User updatedUser = userRepository.save(user);
+
+        this.publishEvent(EventAction.UPDATE, updatedUser);
+
+        log.info("Successfully updated user with id: {}", userId);
+        return updatedUser;
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -83,5 +120,42 @@ public class UserServiceImpl implements UserService {
     private void publishEvent(EventAction action, User user) {
         var event = new EntityEvent<>(action, user);
         redisTemplate.convertAndSend("user-events", event);
+    }
+
+    private void validateAndUpdateEmails(User user, User candidate) {
+        var existingEmails = user.getEmails().stream()
+                .map(EmailData::getEmail)
+                .collect(Collectors.toSet());
+
+        candidate.getEmails().forEach(newEmail -> {
+            String email = newEmail.getEmail();
+            if (!existingEmails.contains(email)) {
+                if (emailDataService.existsByEmailAndAnotherUser(email, user)) {
+                    throw new ResourceAlreadyExistsException(
+                            String.format("Email already exists: '%s'", email));
+                }
+                newEmail.setUser(user);
+                user.getEmails().add(newEmail);
+            }
+        });
+    }
+
+    private void validateAndUpdatePhones(User user, User candidate) {
+        var existingPhones = user.getPhones().stream()
+                .map(PhoneData::getPhone)
+                .collect(Collectors.toSet());
+
+        candidate.getPhones().forEach(newPhone -> {
+            String phone = newPhone.getPhone();
+            if (!existingPhones.contains(phone)) {
+                if (phoneDataService.existsByPhoneAndAnotherUser(phone, user)) {
+                    throw new ResourceAlreadyExistsException(
+                            String.format("Phone already exists: '%s'", phone));
+                }
+                newPhone.setUser(user);
+                user.getPhones().add(newPhone);
+            }
+        });
+
     }
 }

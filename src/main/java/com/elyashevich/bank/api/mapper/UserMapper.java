@@ -3,10 +3,11 @@ package com.elyashevich.bank.api.mapper;
 import com.elyashevich.bank.api.dto.auth.LoginDto;
 import com.elyashevich.bank.api.dto.auth.RegisterDto;
 import com.elyashevich.bank.api.dto.user.UserResponseDto;
-import com.elyashevich.bank.entity.Account;
-import com.elyashevich.bank.entity.EmailData;
-import com.elyashevich.bank.entity.PhoneData;
-import com.elyashevich.bank.entity.User;
+import com.elyashevich.bank.api.dto.user.UserUpdateDto;
+import com.elyashevich.bank.domain.entity.Account;
+import com.elyashevich.bank.domain.entity.EmailData;
+import com.elyashevich.bank.domain.entity.PhoneData;
+import com.elyashevich.bank.domain.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -26,6 +27,10 @@ public interface UserMapper {
 
     @Mapping(target = "emails", expression = "java(mapSingleEmail(loginDTO.email()))")
     User toEntity(LoginDto loginDTO);
+
+    @Mapping(target = "emails", expression = "java(mapMultiEmail(UserUpdateDto.emails()))")
+    @Mapping(target = "phones", expression = "java(mapMultiPhone(UserUpdateDto.phones()))")
+    User toEntity(UserUpdateDto updateDto);
 
     @Mapping(target = "emails", expression = "java(mapEmailToDto(user.getEmails()))")
     @Mapping(target = "phones", expression = "java(mapPhonesToDto(user.getPhones()))")
@@ -74,5 +79,17 @@ public interface UserMapper {
         return Account.builder()
                 .balance(balance == null ? BigDecimal.ZERO : balance)
                 .build();
+    }
+
+    default List<PhoneData> mapMultiPhone(List<String> phones) {
+        return phones.stream()
+                .map(p -> PhoneData.builder().phone(p).build())
+                .toList();
+    }
+
+    default List<EmailData> mapMultiEmail(List<String> emails) {
+        return emails.stream()
+                .map(e -> EmailData.builder().email(e).build())
+                .toList();
     }
 }

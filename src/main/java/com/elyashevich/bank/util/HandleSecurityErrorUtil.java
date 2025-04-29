@@ -1,6 +1,6 @@
 package com.elyashevich.bank.util;
 
-import com.elyashevich.bank.api.dto.ExceptionBodyDto;
+import com.elyashevich.bank.api.dto.exception.ExceptionBodyDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.experimental.UtilityClass;

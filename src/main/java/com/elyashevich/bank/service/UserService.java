@@ -1,11 +1,13 @@
 package com.elyashevich.bank.service;
 
-import com.elyashevich.bank.entity.User;
+import com.elyashevich.bank.domain.entity.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
+
+    User findById(Long id);
 
     User findByEmail(String email);
 
@@ -13,5 +15,5 @@ public interface UserService extends UserDetailsService {
 
     List<User> findAll();
 
-    User update(User user);
+    User update(Long userId, User user);
 }

@@ -1,6 +1,6 @@
 package com.elyashevich.bank.service.impl;
 
-import com.elyashevich.bank.entity.User;
+import com.elyashevich.bank.domain.entity.User;
 import com.elyashevich.bank.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwsHeader;

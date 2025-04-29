@@ -1,15 +1,14 @@
-package com.elyashevich.bank.entity;
+package com.elyashevich.bank.domain.entity;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -18,10 +17,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Entity
-@Table(name = "EMAIL_DATA", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "EMAIL")
-})
+@Table(name = "ACCOUNT")
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -29,16 +28,17 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmailData {
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
 
-    @Column(name = "EMAIL", length = 200, nullable = false, unique = true)
-    private String email;
+    @Column(name = "BALANCE", nullable = false, precision = 19, scale = 2)
+    private BigDecimal balance;
+
 }

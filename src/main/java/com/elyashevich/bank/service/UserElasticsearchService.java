@@ -1,8 +1,8 @@
 package com.elyashevich.bank.service;
 
 import com.elyashevich.bank.api.dto.user.UserSearchRequest;
-import com.elyashevich.bank.entity.User;
-import com.elyashevich.bank.entity.UserES;
+import com.elyashevich.bank.domain.entity.User;
+import com.elyashevich.bank.domain.es.UserES;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
