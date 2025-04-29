@@ -2,6 +2,7 @@ package com.elyashevich.bank.service.impl;
 
 import com.elyashevich.bank.api.dto.auth.JwtResponse;
 import com.elyashevich.bank.domain.entity.User;
+import com.elyashevich.bank.exception.PasswordMismatchException;
 import com.elyashevich.bank.service.AuthService;
 import com.elyashevich.bank.service.JwtService;
 import com.elyashevich.bank.service.UserService;
@@ -44,6 +45,10 @@ public class AuthServiceImpl implements AuthService {
         log.debug("Attempting authenticate user: '{}'", candidate);
 
         var user = this.userService.findByEmail(candidate.getEmails().getFirst().getEmail());
+
+        if (!this.passwordEncoder.matches(user.getPassword(), candidate.getPassword())) {
+            throw new PasswordMismatchException("Password mismatch");
+        }
 
         var response = this.generateJwt(user);
 

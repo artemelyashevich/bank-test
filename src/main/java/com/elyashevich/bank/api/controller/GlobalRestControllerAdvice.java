@@ -6,6 +6,7 @@ import com.elyashevich.bank.exception.InvalidTokenException;
 import com.elyashevich.bank.exception.PasswordMismatchException;
 import com.elyashevich.bank.exception.ResourceAlreadyExistsException;
 import com.elyashevich.bank.exception.ResourceNotFoundException;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Hidden
 @RestControllerAdvice
 public class GlobalRestControllerAdvice {
 
