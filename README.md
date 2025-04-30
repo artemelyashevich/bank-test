@@ -96,5 +96,4 @@ spring:
 ## Scheduled Tasks
 
 - **Interest Accrual**: Runs every 30 seconds to add 10% interest to all accounts (capped at 207% of initial deposit)
-
 - **Data Synchronization**: Runs periodically to sync data between PostgreSQL and Elasticsearch with help of Redis events
